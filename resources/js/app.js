@@ -1,6 +1,9 @@
 import "./bootstrap";
 import { createApp } from "vue";
-import app from "./layouts/app.vue";
+import app from "./components/app.vue";
 import vuetify from "./vuetify";
+import { createPinia } from "pinia";
 
-createApp(app).use(vuetify).mount("#app");
+const pinia = createPinia();
+
+createApp(app).use(vuetify).use(pinia).mount("#app");

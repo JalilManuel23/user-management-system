@@ -13,11 +13,22 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
 
+    /**
+     * Get the JWT token for the given user.
+     *
+     * @param  \App\Models\User  $user
+     * @return string
+     */
     protected function getToken(User $user)
     {
         return JWTAuth::fromUser($user);
     }
 
+    /**
+     * Test if it can return users.
+     *
+     * @return void
+     */
     public function test_it_can_return_users()
     {
         $user = User::factory()->create();
@@ -31,6 +42,11 @@ class UserTest extends TestCase
             ]);
     }
 
+    /**
+     * Test if it can create a user.
+     *
+     * @return void
+     */
     public function test_it_can_create_user()
     {
         $user = User::factory()->create();
@@ -51,6 +67,11 @@ class UserTest extends TestCase
             ]);
     }
 
+    /**
+     * Test if it can show a user.
+     *
+     * @return void
+     */
     public function test_it_can_show_user()
     {
         $user = User::factory()->create();
@@ -65,6 +86,11 @@ class UserTest extends TestCase
             ]);
     }
 
+    /**
+     * Test if it can update a user.
+     *
+     * @return void
+     */
     public function test_it_can_update_user()
     {
         $user = User::factory()->create();
@@ -82,6 +108,11 @@ class UserTest extends TestCase
             ]);
     }
 
+    /**
+     * Test if it can delete a user.
+     *
+     * @return void
+     */
     public function test_it_can_delete_user()
     {
         $user = User::factory()->create();

@@ -6,62 +6,95 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Hash;
 
 class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function it_can_create_a_user()
+    protected function getToken(User $user)
     {
-        $response = $this->postJson('/api/users', [
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-            'password' => 'password'
-        ]);
-
-        $response->assertStatus(201);
-        $this->assertDatabaseHas('users', [
-            'email' => 'john@example.com'
-        ]);
+        return JWTAuth::fromUser($user);
     }
 
-    /** @test */
-    public function it_can_get_all_users()
+    public function test_it_can_return_users()
     {
-        $users = User::factory()->count(5)->create();
+        $user = User::factory()->create();
+        $token = $this->getToken($user);
 
-        $response = $this->getJson('/api/users');
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)->getJson('/api/user');
 
         $response->assertStatus(200)
-            ->assertJsonCount(5, 'data');
+            ->assertJsonStructure([
+                'users' => [],
+            ]);
     }
 
-    /** @test */
-    public function it_can_update_a_user()
+    public function test_it_can_create_user()
     {
         $user = User::factory()->create();
+        $token = $this->getToken($user);
 
-        $response = $this->putJson("/api/users/{$user->id}", [
-            'name' => 'Updated Name'
-        ]);
+        $newUser = [
+            'email' => 'newuser@mail.com',
+            'name' => 'New User',
+            'password' => 'password'
+        ];
 
-        $response->assertStatus(200);
-        $this->assertDatabaseHas('users', [
-            'id' => $user->id,
-            'name' => 'Updated Name'
-        ]);
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson('/api/user', $newUser );
+
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'user' => [],
+            ]);
     }
 
-    /** @test */
-    public function it_can_delete_a_user()
+    public function test_it_can_show_user()
     {
         $user = User::factory()->create();
+        $token = $this->getToken($user);
 
-        $response = $this->deleteJson("/api/users/{$user->id}");
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->getJson('/api/user/'.$user->id);
 
-        $response->assertStatus(204);
-        $this->assertDeleted('users', ['id' => $user->id]);
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'user' => [],
+            ]);
+    }
+
+    public function test_it_can_update_user()
+    {
+        $user = User::factory()->create();
+        $token = $this->getToken($user);
+        $newName = 'New Name';
+
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->putJson('/api/user/'.$user->id, [
+                'name' => $newName,
+            ]);
+
+        $response->assertStatus(200)
+            ->assertJsonFragment([
+                'name' => $newName,
+            ]);
+    }
+
+    public function test_it_can_delete_user()
+    {
+        $user = User::factory()->create();
+        $token = $this->getToken($user);
+
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->deleteJson('/api/user/'.$user->id);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'message' => 'User deleted successfully',
+            ]);
+
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
     }
 }
-

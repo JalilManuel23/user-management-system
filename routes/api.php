@@ -20,10 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 */
 
-Route::middleware('auth')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
@@ -32,4 +28,12 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
+});
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('user', [UserController::class, 'index']);
+    Route::post('user', [UserController::class, 'store']);
+    Route::get('user/{id}', [UserController::class, 'show']);
+    Route::put('user/{id}', [UserController::class, 'update']);
+    Route::delete('user/{id}', [UserController::class, 'destroy']);
 });

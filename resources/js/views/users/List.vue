@@ -12,6 +12,10 @@ usersStore.getAll();
 <template>
     <h1>Users</h1>
 
+    <router-link to="/users/add" class="btn btn-sm btn-success mb-2"
+        >Add User</router-link
+    >
+
     <table>
         <thead>
             <th>ID</th>

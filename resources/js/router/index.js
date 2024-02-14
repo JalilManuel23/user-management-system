@@ -9,7 +9,7 @@ export const router = createRouter({
     linkActiveClass: "active",
     routes: [
         { path: "/", component: Login },
-        // { ...usersRoutes },
+        { ...usersRoutes },
         // catch all redirect to home page
         { path: "/:pathMatch(.*)*", redirect: "/" },
     ],
@@ -17,12 +17,12 @@ export const router = createRouter({
 
 router.beforeEach(async (to) => {
     // redirect to login page if not logged in and trying to access a restricted page
-    const publicPages = ["/login"];
+    const publicPages = ["/"];
     const authRequired = !publicPages.includes(to.path);
     const authStore = useAuthStore();
 
     if (authRequired && !authStore.user) {
         authStore.returnUrl = to.fullPath;
-        return "/login";
+        return "/";
     }
 });

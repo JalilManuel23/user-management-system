@@ -1,24 +1,30 @@
-import { useAuthStore } from '@/stores';
+import { useAuthStore } from "@/stores";
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export const fetchWrapper = {
-    get: request('GET'),
-    post: request('POST'),
-    put: request('PUT'),
-    delete: request('DELETE')
+    get: request("GET"),
+    post: request("POST"),
+    put: request("PUT"),
+    delete: request("DELETE"),
 };
 
 function request(method) {
     return (url, body) => {
         const requestOptions = {
             method,
-            headers: authHeader(url)
+            headers: authHeader(url),
         };
+
+        requestOptions.headers["Content-Type"] = "application/json";
+        requestOptions.headers["Accept"] = "application/json";
+
         if (body) {
-            requestOptions.headers['Content-Type'] = 'application/json';
             requestOptions.body = JSON.stringify(body);
         }
-        return fetch(url, requestOptions).then(handleResponse);
-    }
+
+        return fetch(`${apiUrl}/${url}`, requestOptions).then(handleResponse);
+    };
 }
 
 // helper functions
@@ -26,17 +32,21 @@ function request(method) {
 function authHeader(url) {
     // return auth header with jwt if user is logged in and request is to the api url
     const { user } = useAuthStore();
-    const isLoggedIn = !!user?.token;
-    const isApiUrl = url.startsWith(import.meta.env.VITE_API_URL);
-    if (isLoggedIn && isApiUrl) {
-        return { Authorization: `Bearer ${user.token}` };
+    const isLoggedIn = !!user?.access_token;
+
+    //const isApiUrl = url.startsWith(import.meta.env.VITE_API_URL);
+    if (isLoggedIn) {
+        return { Authorization: `Bearer ${user.access_token}` };
     } else {
         return {};
     }
 }
 
 async function handleResponse(response) {
-    const isJson = response.headers?.get('content-type')?.includes('application/json');
+    const isJson = response.headers
+        ?.get("Content-Type")
+        ?.includes("application/json");
+
     const data = isJson ? await response.json() : null;
 
     // check for error response
@@ -54,4 +64,3 @@ async function handleResponse(response) {
 
     return data;
 }
-

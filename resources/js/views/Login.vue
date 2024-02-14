@@ -53,9 +53,6 @@ async function onSubmit(values) {
                         ></span>
                         Login
                     </button>
-                    <router-link to="register" class="btn btn-link"
-                        >Register</router-link
-                    >
                 </div>
             </Form>
         </div>

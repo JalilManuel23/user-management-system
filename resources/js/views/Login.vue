@@ -1,56 +1,64 @@
 <script setup>
-import { Form, Field } from "vee-validate";
-import * as Yup from "yup";
+import { ref } from "vue";
+import { useField, useForm } from "vee-validate";
+import * as yup from "yup";
+
 import { useAuthStore } from "@/stores";
-const schema = Yup.object().shape({
-    username: Yup.string().required("Username is required"),
-    password: Yup.string().required("Password is required"),
+
+const validationSchema = yup.object().shape({
+    email: yup.string().email().required(),
+    password: yup.string().min(8).required(),
 });
-const onSubmit = async (values) => {
+
+const { handleSubmit, handleReset } = useForm({
+    validationSchema,
+});
+
+const email = useField("email", validationSchema);
+const password = useField("password", validationSchema);
+
+const onSubmit = handleSubmit(async (values) => {
     const authStore = useAuthStore();
-    const { username, password } = values;
-    await authStore.login(username, password);
-};
+    const { email, password } = values;
+    await authStore.login(email, password);
+});
 </script>
+
 <template>
-    <div class="card m-3">
-        <h4 class="card-header">Login</h4>
-        <div class="card-body">
-            <Form
-                @submit="onSubmit"
-                :validation-schema="schema"
-                v-slot="{ errors, isSubmitting }"
-            >
-                <div class="form-group">
-                    <label>Username</label>
-                    <Field
-                        name="username"
-                        type="text"
-                        class="form-control"
-                        :class="{ 'is-invalid': errors.username }"
-                    />
-                    <div class="invalid-feedback">{{ errors.username }}</div>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <Field
-                        name="password"
-                        type="password"
-                        class="form-control"
-                        :class="{ 'is-invalid': errors.password }"
-                    />
-                    <div class="invalid-feedback">{{ errors.password }}</div>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-primary" :disabled="isSubmitting">
-                        <span
-                            v-show="isSubmitting"
-                            class="spinner-border spinner-border-sm mr-1"
-                        ></span>
-                        Login
-                    </button>
-                </div>
-            </Form>
-        </div>
+    <div class="d-flex align-center justify-center" style="height: 100vh">
+        <v-container fluid fill-height>
+            <v-row align="center" justify="center">
+                <v-col cols="12" sm="8" md="6" lg="4">
+                    <v-card elevation="3">
+                        <v-card-title class="grey lighten-4">
+                            <span class="headline">Login</span>
+                        </v-card-title>
+                        <v-card-text>
+                            <v-form @submit.prevent="onSubmit">
+                                <v-text-field
+                                    label="E-mail"
+                                    v-model="email.value.value"
+                                    :error-messages="email.errorMessage.value"
+                                ></v-text-field>
+
+                                <v-text-field
+                                    label="Password"
+                                    type="password"
+                                    v-model="password.value.value"
+                                    :error-messages="
+                                        password.errorMessage.value
+                                    "
+                                ></v-text-field>
+                                <div class="text-center">
+                                    <v-btn color="primary" type="submit"
+                                        >Sign In</v-btn
+                                    >
+                                </div>
+                            </v-form>
+                        </v-card-text>
+                    </v-card>
+                </v-col>
+            </v-row>
+        </v-container>
     </div>
 </template>

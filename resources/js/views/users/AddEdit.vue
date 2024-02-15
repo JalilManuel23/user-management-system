@@ -13,6 +13,7 @@ const id = route.params.id;
 
 let title = "Add User";
 let user = null;
+
 if (id) {
     // edit mode
     title = "Edit User";
@@ -34,7 +35,7 @@ async function onSubmit(values) {
     try {
         let message;
         if (user) {
-            await usersStore.update(user.value.id, values);
+            await usersStore.update(id, values);
             message = "User updated";
         } else {
             await usersStore.register(values);

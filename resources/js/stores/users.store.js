@@ -61,5 +61,8 @@ export const useUsersStore = defineStore({
                 authStore.logout();
             }
         },
+        setActiveUser(user) {
+            this.user = user;
+        },
     },
 });

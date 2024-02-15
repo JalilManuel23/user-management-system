@@ -32,9 +32,21 @@ usersStore.getAll();
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>
                 <td style="white-space: nowrap">
-                    <router-link :to="`/users/edit/${user.id}`" class="btn btn-sm btn-primary mr-1">Edit</router-link>
-                    <button @click="usersStore.delete(user.id)" class="btn btn-sm btn-danger btn-delete-user" :disabled="user.isDeleting">
-                        <span v-if="user.isDeleting" class="spinner-border spinner-border-sm"></span>
+                    <router-link
+                        @click="usersStore.setActiveUser(user)"
+                        :to="`/users/edit/${user.id}`"
+                        class="btn btn-sm btn-primary mr-1"
+                        >Edit</router-link
+                    >
+                    <button
+                        @click="usersStore.delete(user.id)"
+                        class="btn btn-sm btn-danger btn-delete-user"
+                        :disabled="user.isDeleting"
+                    >
+                        <span
+                            v-if="user.isDeleting"
+                            class="spinner-border spinner-border-sm"
+                        ></span>
                         <span v-else>Delete</span>
                     </button>
                 </td>

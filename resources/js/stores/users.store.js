@@ -50,7 +50,7 @@ export const useUsersStore = defineStore({
             // add isDeleting prop to user being deleted
             this.users.find((x) => x.id === id).isDeleting = true;
 
-            await fetchWrapper.delete(`user(${id}`);
+            await fetchWrapper.delete(`user/${id}`);
 
             // remove user from list after deleted
             this.users = this.users.filter((x) => x.id !== id);

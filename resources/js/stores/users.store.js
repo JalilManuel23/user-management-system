@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 import { fetchWrapper, showAlert } from "@/helpers";
 import { useAuthStore } from "@/stores";
 
+import Swal from "sweetalert2";
+
 export const useUsersStore = defineStore({
     id: "users",
     state: () => ({
@@ -47,21 +49,34 @@ export const useUsersStore = defineStore({
             }
         },
         async delete(id) {
+            Swal.fire({
+                title: "Are you sure?",
+                showConfirmButton: false,
+                showDenyButton: true,
+                showCancelButton: true,
+                denyButtonText: "Yes, delete this user.",
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isDenied) {
+                    this.users.find((x) => x.id === id).isDeleting = true;
+
+                    fetchWrapper.delete(`user/${id}`);
+
+                    showAlert("User deleted");
+
+                    // remove user from list after deleted
+                    this.users = this.users.filter((x) => x.id !== id);
+
+                    // auto logout if the logged in user deleted their own record
+                    const authStore = useAuthStore();
+                    if (id === authStore.user.id) {
+                        authStore.logout();
+                    }
+                } else {
+                    Swal.fire("Changes are not saved", "", "info");
+                }
+            });
             // add isDeleting prop to user being deleted
-            this.users.find((x) => x.id === id).isDeleting = true;
-
-            await fetchWrapper.delete(`user/${id}`);
-
-            showAlert("User deleted");
-
-            // remove user from list after deleted
-            this.users = this.users.filter((x) => x.id !== id);
-
-            // auto logout if the logged in user deleted their own record
-            const authStore = useAuthStore();
-            if (id === authStore.user.id) {
-                authStore.logout();
-            }
         },
         setActiveUser(user) {
             this.user = user;

@@ -1,7 +1,12 @@
 <script setup>
 import { storeToRefs } from "pinia";
 
-import { useUsersStore } from "@/stores";
+import { useUsersStore, useAuthStore } from "@/stores";
+
+const authStore = useAuthStore();
+const { authUser } = storeToRefs(authStore);
+
+authStore.me();
 
 const usersStore = useUsersStore();
 const { users } = storeToRefs(usersStore);
@@ -56,13 +61,22 @@ usersStore.getAll();
                             </v-btn>
                         </router-link>
 
-                        <v-btn
-                            @click="usersStore.delete(user.id)"
-                            rounded="lg"
-                            color="red-darken-1"
-                        >
-                            <span>Delete</span>
-                        </v-btn>
+                        <v-tooltip bottom :disabled="user.id !== authUser.id">
+                            <template v-slot:activator="{ props }">
+                                <div v-bind="props" class="d-inline-block">
+                                    <v-btn
+                                        @click="usersStore.delete(user.id)"
+                                        rounded="lg"
+                                        :title="hola"
+                                        :disabled="user.id === authUser.id"
+                                        color="red-darken-1"
+                                    >
+                                        <span>Delete</span>
+                                    </v-btn>
+                                </div>
+                            </template>
+                            <span>You cannot delete your user.</span>
+                        </v-tooltip>
                     </td>
                 </tr>
             </tbody>

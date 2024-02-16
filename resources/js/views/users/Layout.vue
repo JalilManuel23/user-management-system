@@ -1,5 +1,11 @@
 <script setup>
+import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/stores";
+
+const authStore = useAuthStore();
+const { authUser } = storeToRefs(authStore);
+
+authStore.me();
 
 const logout = () => {
     const authStore = useAuthStore();
@@ -25,8 +31,8 @@ const logout = () => {
                 <v-row>
                     <v-navigation-drawer>
                         <v-list-item
-                            title=""
-                            subtitle="Dashboard"
+                            :title="`Welcome ${authUser.name}!`"
+                            :subtitle="`${authUser.email}`"
                         ></v-list-item>
                         <v-divider></v-divider>
 

@@ -8,6 +8,8 @@ import { storeToRefs } from "pinia";
 import { useUsersStore } from "@/stores";
 import { router } from "@/router";
 
+import Swal from 'sweetalert2';
+
 const usersStore = useUsersStore();
 const route = useRoute();
 const id = route.params.id;
@@ -50,9 +52,25 @@ const onSubmit = handleSubmit(async (values) => {
             await usersStore.register(values);
             message = "User added";
         }
+        Swal.fire({
+            title: message,
+            position: "top-end",
+            showConfirmButton: false,
+            icon: "success",
+            toast: true,
+            timer: 1500
+        });
         await router.push("/users");
     } catch (error) {
-        console.log(error);
+        Swal.fire({
+            title: error,
+            position: "top-end",
+            showConfirmButton: false,
+            icon: "error",
+            toast: true,
+            timer: 1500
+        });
+
     }
 });
 </script>

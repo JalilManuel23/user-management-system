@@ -1,3 +1,12 @@
+<script setup>
+import { useAuthStore } from "@/stores";
+
+const logout = () => {
+    const authStore = useAuthStore();
+    authStore.logout();
+};
+</script>
+
 <template>
     <v-app>
         <!-- Navbar -->
@@ -21,7 +30,7 @@
                          <router-link :to="`/users`" class="mr-2 router-link-custom">
                             <v-list-item link title="Users"></v-list-item>
                         </router-link>
-                       
+
                     </v-navigation-drawer>
 
                     <v-col cols="10">
@@ -39,7 +48,7 @@
 
 <style scoped>
 .router-link-custom {
-  text-decoration: none; 
+  text-decoration: none;
   color: #52514f;
 }
 </style>

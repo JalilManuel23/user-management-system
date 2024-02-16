@@ -4,6 +4,8 @@ import { ref } from "vue";
 import { fetchWrapper } from "@/helpers";
 import { router } from "@/router";
 
+import Swal from "sweetalert2";
+
 export const useAuthStore = defineStore({
     id: "auth",
     state: () => ({
@@ -24,7 +26,7 @@ export const useAuthStore = defineStore({
 
                 router.push(this.returnUrl || "/users");
             } catch (error) {
-                console.log(error);
+                Swal.fire(error);
             }
         },
         logout() {

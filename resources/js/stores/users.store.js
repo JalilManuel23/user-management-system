@@ -13,7 +13,21 @@ export const useUsersStore = defineStore({
     }),
     actions: {
         async register(user) {
-            await fetchWrapper.post("user", user);
+            try {
+                await fetchWrapper.post("user", user);
+                showAlert("User registered successfully");
+            } catch (error) {
+                if (!!error.email[0]) {
+                    showAlert(error.email[0], "warning", "", 3000);
+                } else {
+                    showAlert(
+                        "Sorry, it seems there was an error with the data you entered.",
+                        "warning",
+                        "Please make sure to follow the correct format for each field and try again.",
+                        3000,
+                    );
+                }
+            }
         },
         async getAll() {
             this.users = { loading: true };
@@ -35,17 +49,31 @@ export const useUsersStore = defineStore({
             }
         },
         async update(id, params) {
-            await fetchWrapper.put(`user/${id}`, params);
+            try {
+                await fetchWrapper.put(`user/${id}`, params);
+                showAlert("User registered successfully");
 
-            // update stored user if the logged in user updated their own record
-            const authStore = useAuthStore();
-            if (id === authStore.user.id) {
-                // update local storage
-                const user = { ...authStore.user, ...params };
-                localStorage.setItem("user", JSON.stringify(user));
+                // update stored user if the logged in user updated their own record
+                const authStore = useAuthStore();
+                if (id === authStore.user.id) {
+                    // update local storage
+                    const user = { ...authStore.user, ...params };
+                    localStorage.setItem("user", JSON.stringify(user));
 
-                // update auth user in pinia state
-                authStore.user = user;
+                    // update auth user in pinia state
+                    authStore.user = user;
+                }
+            } catch (error) {
+                if (!!error.email[0]) {
+                    showAlert(error.email[0], "warning", "", 3000);
+                } else {
+                    showAlert(
+                        "Sorry, it seems there was an error with the data you entered.",
+                        "warning",
+                        "Please make sure to follow the correct format for each field and try again.",
+                        3000,
+                    );
+                }
             }
         },
         async delete(id) {

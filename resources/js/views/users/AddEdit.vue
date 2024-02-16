@@ -43,27 +43,14 @@ if (id) {
 }
 
 const onSubmit = handleSubmit(async (values) => {
-    try {
-        let message;
-        if (user) {
-            await usersStore.update(id, values);
-            message = "User updated";
-        } else {
-            await usersStore.register(values);
-            message = "User added";
-        }
-
-        showAlert(message);
-
-        await router.push("/users");
-    } catch (error) {
-        showAlert(
-            "Sorry, it seems there was an error with the data you entered.",
-            "warning",
-            "Please make sure to follow the correct format for each field and try again.",
-            3000,
-        );
+    let message;
+    if (user) {
+        await usersStore.update(id, values);
+    } else {
+        await usersStore.register(values);
     }
+
+    await router.push("/users");
 });
 </script>
 
@@ -104,7 +91,11 @@ const onSubmit = handleSubmit(async (values) => {
                                 ></v-text-field>
 
                                 <v-text-field
-                                    label="Password"
+                                    :label="
+                                        id
+                                            ? 'Password (Leave blank to keep the same password)'
+                                            : 'Password'
+                                    "
                                     type="password"
                                     v-model="password.value.value"
                                     :error-messages="

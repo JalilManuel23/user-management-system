@@ -58,7 +58,7 @@ async function handleResponse(response) {
         }
 
         // get error message from body or default to response status
-        const error = (data && data.message) || response.status;
+        const { error } = (data && data) || response.status;
         return Promise.reject(error);
     }
 

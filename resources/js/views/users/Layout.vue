@@ -1,12 +1,3 @@
-<script setup>
-import { useAuthStore } from "@/stores";
-
-const logout = () => {
-    const authStore = useAuthStore();
-    authStore.logout();
-};
-</script>
-
 <template>
     <v-app>
         <!-- Navbar -->
@@ -16,49 +7,26 @@ const logout = () => {
             <v-btn @click="logout">Logout</v-btn>
         </v-app-bar>
 
-        <!-- Contenido Principal -->
         <v-main>
             <v-container fluid>
-                <!-- Layout con fila y columna -->
                 <v-row>
-                    <!-- Columna de Opciones -->
-                    <v-col cols="2">
-                        <v-card class="fill-height">
-                            <v-list>
-                                <v-list-item link>
-                                    <v-list-item-icon>
-                                        <v-icon>mdi-home</v-icon>
-                                    </v-list-item-icon>
-                                    <v-list-item-title
-                                        >Inicio</v-list-item-title
-                                    >
-                                </v-list-item>
-                                <v-list-item link>
-                                    <v-list-item-icon>
-                                        <v-icon>mdi-account</v-icon>
-                                    </v-list-item-icon>
-                                    <v-list-item-title
-                                        >Mi Perfil</v-list-item-title
-                                    >
-                                </v-list-item>
-                                <v-list-item link>
-                                    <v-list-item-icon>
-                                        <v-icon>mdi-settings</v-icon>
-                                    </v-list-item-icon>
-                                    <v-list-item-title
-                                        >Configuración</v-list-item-title
-                                    >
-                                </v-list-item>
-                            </v-list>
-                        </v-card>
-                    </v-col>
+                    <v-navigation-drawer>
+                        <v-list-item title="" subtitle="Dashboard"></v-list-item>
+                        <v-divider></v-divider>
 
-                    <!-- Contenido -->
+                        <router-link :to="`/users/add`" class="mr-2 router-link-custom">
+                            <v-list-item link title="Add User"></v-list-item>
+                        </router-link>
+
+                         <router-link :to="`/users`" class="mr-2 router-link-custom">
+                            <v-list-item link title="Users"></v-list-item>
+                        </router-link>
+                       
+                    </v-navigation-drawer>
+
                     <v-col cols="10">
-                        <!-- Contenido dinámico de la página -->
-                        <v-card class="fill-height">
+                        <v-card>
                             <v-card-text>
-                                <!-- Aquí va el contenido dinámico de la página -->
                                 <router-view></router-view>
                             </v-card-text>
                         </v-card>
@@ -69,18 +37,9 @@ const logout = () => {
     </v-app>
 </template>
 
-<script>
-export default {
-    methods: {
-        logout() {
-            // Aquí puedes agregar la lógica para cerrar sesión
-        },
-    },
-};
-</script>
-
 <style scoped>
-.fill-height {
-    height: 100%;
+.router-link-custom {
+  text-decoration: none; 
+  color: #52514f;
 }
 </style>

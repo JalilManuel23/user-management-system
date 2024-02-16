@@ -8,7 +8,7 @@ import { storeToRefs } from "pinia";
 import { useUsersStore } from "@/stores";
 import { router } from "@/router";
 
-import Swal from 'sweetalert2';
+import { showAlert } from "@/helpers";
 
 const usersStore = useUsersStore();
 const route = useRoute();
@@ -52,31 +52,37 @@ const onSubmit = handleSubmit(async (values) => {
             await usersStore.register(values);
             message = "User added";
         }
-        Swal.fire({
-            title: message,
-            position: "top-end",
-            showConfirmButton: false,
-            icon: "success",
-            toast: true,
-            timer: 1500
-        });
+
+        showAlert(message);
+
         await router.push("/users");
     } catch (error) {
-        Swal.fire({
-            title: error,
-            position: "top-end",
-            showConfirmButton: false,
-            icon: "error",
-            toast: true,
-            timer: 1500
-        });
-
+        showAlert(
+            "Sorry, it seems there was an error with the data you entered.",
+            "warning",
+            "Please make sure to follow the correct format for each field and try again.",
+            3000,
+        );
     }
 });
 </script>
 
 <template>
-    <h1>{{ title }}</h1>
+    <v-container fluid>
+        <v-layout row justify-space-between>
+            <h1 style="flex-grow: 5">{{ title }}</h1>
+
+            <router-link to="/users">
+                <v-btn
+                    color="grey-darken-1"
+                    rounded="lg"
+                    style="background-color: lightblue; flex-grow: 1"
+                >
+                    <span>Return</span>
+                </v-btn>
+            </router-link>
+        </v-layout>
+    </v-container>
 
     <div class="d-flex align-center justify-center" style="height: 50vh">
         <v-container fluid fill-height>

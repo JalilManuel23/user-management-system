@@ -11,8 +11,20 @@ usersStore.getAll();
 
 <template>
     <div>
-        <h1>Users</h1>
-
+        <v-container fluid>
+            <v-layout row justify-space-between>
+                <h1 style="flex-grow: 7">Users</h1>
+                <router-link to="/users/add">
+                    <v-btn
+                        color="blue-darken-2"
+                        rounded="lg"
+                        style="background-color: lightblue; flex-grow: 1"
+                    >
+                        <span>Add User</span>
+                    </v-btn>
+                </router-link>
+            </v-layout>
+        </v-container>
         <v-table class="user-table">
             <thead>
                 <tr>
@@ -28,17 +40,27 @@ usersStore.getAll();
                     <td>{{ user.name }}</td>
                     <td>{{ user.email }}</td>
                     <td class="action-buttons">
-                        <router-link :to="`/users/edit/${user.id}`" class="mr-2" @click="usersStore.setActiveUser({
-                            id: user.id,
-                            email: user.email,
-                            name: user.name
-                        })">
-                            <v-btn  color="blue-darken-4" rounded="lg">
+                        <router-link
+                            :to="`/users/edit/${user.id}`"
+                            class="mr-2"
+                            @click="
+                                usersStore.setActiveUser({
+                                    id: user.id,
+                                    email: user.email,
+                                    name: user.name,
+                                })
+                            "
+                        >
+                            <v-btn color="blue-darken-4" rounded="lg">
                                 <span>Update</span>
                             </v-btn>
                         </router-link>
-                         
-                        <v-btn @click="usersStore.delete(user.id)" rounded="lg" color="red-darken-1">
+
+                        <v-btn
+                            @click="usersStore.delete(user.id)"
+                            rounded="lg"
+                            color="red-darken-1"
+                        >
                             <span>Delete</span>
                         </v-btn>
                     </td>

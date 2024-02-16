@@ -4,7 +4,7 @@ import { ref } from "vue";
 import { fetchWrapper } from "@/helpers";
 import { router } from "@/router";
 
-import Swal from "sweetalert2";
+import { showAlert } from "@/helpers";
 
 export const useAuthStore = defineStore({
     id: "auth",
@@ -25,8 +25,10 @@ export const useAuthStore = defineStore({
                 localStorage.setItem("user", JSON.stringify(user));
 
                 router.push(this.returnUrl || "/users");
+
+                showAlert("Welcome!");
             } catch (error) {
-                Swal.fire(error);
+                showAlert("Wrong credentials", "warning");
             }
         },
         logout() {

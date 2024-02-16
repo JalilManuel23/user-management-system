@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-import { fetchWrapper } from "@/helpers";
+import { fetchWrapper, showAlert } from "@/helpers";
 import { useAuthStore } from "@/stores";
 
 export const useUsersStore = defineStore({
@@ -52,6 +52,8 @@ export const useUsersStore = defineStore({
 
             await fetchWrapper.delete(`user/${id}`);
 
+            showAlert("User deleted");
+
             // remove user from list after deleted
             this.users = this.users.filter((x) => x.id !== id);
 
@@ -62,7 +64,6 @@ export const useUsersStore = defineStore({
             }
         },
         setActiveUser(user) {
-            console.log(user)
             this.user = user;
         },
     },

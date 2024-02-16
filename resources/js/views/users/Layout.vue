@@ -11,7 +11,11 @@ const logout = () => {
     <v-app>
         <!-- Navbar -->
         <v-app-bar app color="primary">
-            <v-toolbar-title>User Management System</v-toolbar-title>
+            <router-link to="/users" style="color: #fff; text-decoration: none">
+                <v-toolbar-title style="font-weight: bold; padding-left: 20px"
+                    >User Management System</v-toolbar-title
+                >
+            </router-link>
             <v-spacer></v-spacer>
             <v-btn @click="logout">Logout</v-btn>
         </v-app-bar>
@@ -20,17 +24,18 @@ const logout = () => {
             <v-container fluid>
                 <v-row>
                     <v-navigation-drawer>
-                        <v-list-item title="" subtitle="Dashboard"></v-list-item>
+                        <v-list-item
+                            title=""
+                            subtitle="Dashboard"
+                        ></v-list-item>
                         <v-divider></v-divider>
 
-                        <router-link :to="`/users/add`" class="mr-2 router-link-custom">
-                            <v-list-item link title="Add User"></v-list-item>
-                        </router-link>
-
-                         <router-link :to="`/users`" class="mr-2 router-link-custom">
+                        <router-link
+                            :to="`/users`"
+                            class="mr-2 router-link-custom"
+                        >
                             <v-list-item link title="Users"></v-list-item>
                         </router-link>
-
                     </v-navigation-drawer>
 
                     <v-col cols="10">
@@ -48,7 +53,7 @@ const logout = () => {
 
 <style scoped>
 .router-link-custom {
-  text-decoration: none;
-  color: #52514f;
+    text-decoration: none;
+    color: #52514f;
 }
 </style>

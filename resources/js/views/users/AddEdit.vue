@@ -19,11 +19,11 @@ let user = null;
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
-    email: Yup.string().required("Email is required"),
+    email: Yup.string().email().required("Email is required"),
     password: Yup.string()
         .transform((x) => (x === "" ? undefined : x))
         .concat(id ? null : Yup.string().required("Password is required"))
-        .min(6, "Password must be at least 6 characters"),
+        .min(8, "Password must be at least 8 characters"),
 });
 
 const { handleSubmit, handleReset } = useForm({

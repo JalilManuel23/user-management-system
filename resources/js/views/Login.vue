@@ -22,6 +22,14 @@ const onSubmit = handleSubmit(async (values) => {
     const { email, password } = values;
     await authStore.login(email, password);
 });
+
+const inputType = ref("password");
+const buttonText = ref("Show");
+
+const toggleInputType = () => {
+    inputType.value = inputType.value === "password" ? "text" : "password";
+    buttonText.value = buttonText.value === "Show" ? "Hide" : "Show";
+};
 </script>
 
 <template>
@@ -43,12 +51,22 @@ const onSubmit = handleSubmit(async (values) => {
 
                                 <v-text-field
                                     label="Password"
-                                    type="password"
+                                    :type="inputType"
                                     v-model="password.value.value"
                                     :error-messages="
                                         password.errorMessage.value
                                     "
-                                ></v-text-field>
+                                >
+                                    <template v-slot:append-inner>
+                                        <v-btn
+                                            variant="plain"
+                                            @click="toggleInputType"
+                                            color="grey darken-3"
+                                            small
+                                            >{{ buttonText }}</v-btn
+                                        >
+                                    </template>
+                                </v-text-field>
                                 <div class="text-center">
                                     <v-btn color="primary" type="submit"
                                         >Sign In</v-btn

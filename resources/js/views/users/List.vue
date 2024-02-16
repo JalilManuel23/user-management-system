@@ -28,7 +28,11 @@ usersStore.getAll();
                     <td>{{ user.name }}</td>
                     <td>{{ user.email }}</td>
                     <td class="action-buttons">
-                        <router-link :to="`/users/edit/${user.id}`" class="mr-2" @click="usersStore.setActiveUser(user)">
+                        <router-link :to="`/users/edit/${user.id}`" class="mr-2" @click="usersStore.setActiveUser({
+                            id: user.id,
+                            email: user.email,
+                            name: user.name
+                        })">
                             <v-btn  color="blue-darken-4" rounded="lg">
                                 <span>Update</span>
                             </v-btn>

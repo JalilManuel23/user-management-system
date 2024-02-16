@@ -1,5 +1,6 @@
 <script setup>
-import { Form, Field } from "vee-validate";
+import { ref } from "vue";
+import { useField, useForm } from "vee-validate";
 import * as Yup from "yup";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -14,24 +15,32 @@ const id = route.params.id;
 let title = "Add User";
 let user = null;
 
-if (id) {
-    // edit mode
-    title = "Edit User";
-    ({ user } = storeToRefs(usersStore));
-    // usersStore.getById(id);
-}
-
-const schema = Yup.object().shape({
+const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
     email: Yup.string().required("Email is required"),
     password: Yup.string()
         .transform((x) => (x === "" ? undefined : x))
-        // password optional in edit mode
-        .concat(user ? null : Yup.string().required("Password is required"))
+        .concat(id ? null : Yup.string().required("Password is required"))
         .min(6, "Password must be at least 6 characters"),
 });
 
-async function onSubmit(values) {
+const { handleSubmit, handleReset } = useForm({
+    validationSchema,
+});
+
+const name = useField("name", validationSchema);
+const email = useField("email", validationSchema);
+const password = useField("password", validationSchema);
+
+if (id) {
+    title = "Edit User";
+    ({ user } = storeToRefs(usersStore));
+
+    name.value.value = user.value.name;
+    email.value.value = user.value.email;
+}
+
+const onSubmit = handleSubmit(async (values) => {
     try {
         let message;
         if (user) {
@@ -45,67 +54,49 @@ async function onSubmit(values) {
     } catch (error) {
         console.log(error);
     }
-}
+});
 </script>
 
 <template>
     <h1>{{ title }}</h1>
-    <router-link to="/users" class="btn btn-sm btn-success mb-2"
-        >Back</router-link
-    >
 
-    <Form
-        @submit="onSubmit"
-        :validation-schema="schema"
-        :initial-values="user"
-        v-slot="{ errors, isSubmitting }"
-    >
-        <div class="form-row">
-            <div class="form-group col">
-                <label>Name</label>
-                <Field
-                    name="name"
-                    type="text"
-                    class="form-control"
-                    :class="{ 'is-invalid': errors.name }"
-                />
-                <div class="invalid-feedback">{{ errors.name }}</div>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col">
-                <label>Email</label>
-                <Field
-                    name="email"
-                    type="email"
-                    class="form-control"
-                    :class="{ 'is-invalid': errors.email }"
-                />
-                <div class="invalid-feedback">{{ errors.email }}</div>
-            </div>
-            <div class="form-group col">
-                <label>
-                    Password
-                    <em v-if="user">(Leave blank to keep the same password)</em>
-                </label>
-                <Field
-                    name="password"
-                    type="password"
-                    class="form-control"
-                    :class="{ 'is-invalid': errors.password }"
-                />
-                <div class="invalid-feedback">{{ errors.password }}</div>
-            </div>
-        </div>
-        <div class="form-group">
-            <button class="btn btn-primary" :disabled="isSubmitting">
-                <span
-                    v-show="isSubmitting"
-                    class="spinner-border spinner-border-sm mr-1"
-                ></span>
-                Save
-            </button>
-            <router-link to="/users" class="btn btn-link">Cancel</router-link>
-        </div>
-    </Form>
+    <div class="d-flex align-center justify-center" style="height: 50vh">
+        <v-container fluid fill-height>
+            <v-row align="center" justify="center">
+                <v-col cols="10">
+                    <v-card elevation="0">
+                        <v-card-text>
+                            <v-form @submit.prevent="onSubmit">
+                                <v-text-field
+                                    label="Name"
+                                    v-model="name.value.value"
+                                    :error-messages="name.errorMessage.value"
+                                ></v-text-field>
+
+                                <v-text-field
+                                    label="E-mail"
+                                    v-model="email.value.value"
+                                    :error-messages="email.errorMessage.value"
+                                ></v-text-field>
+
+                                <v-text-field
+                                    label="Password"
+                                    type="password"
+                                    v-model="password.value.value"
+                                    :error-messages="
+                                        password.errorMessage.value
+                                    "
+                                ></v-text-field>
+                                <div class="text-center">
+                                    <v-btn color="primary" type="submit"
+                                        >Save</v-btn
+                                    >
+                                </div>
+                            </v-form>
+                        </v-card-text>
+                    </v-card>
+                </v-col>
+            </v-row>
+        </v-container>
+    </div>
 </template>

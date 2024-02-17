@@ -2,7 +2,14 @@
 <p align="center">
 <img src="https://socialify.git.ci/JalilManuel23/user-management-system/image?description=1&amp;descriptionEditable=Users%20CRUD&amp;font=Inter&amp;language=1&amp;name=1&amp;owner=1&amp;pattern=Signal&amp;stargazers=1&amp;theme=Light" alt="project-image"></p>
 <p id="description">A web application that enables CRUD operations for user management. It includes user authentication an admin dashboard for managing users CRUD functionality for creating reading updating and deleting user data.</p>
-<h2>🛠️ Installation Steps:</h2>
+
+## Table of Contents
+
+1. [Installation Steps](#installation-steps)
+2. [Testing](#testing)
+
+## Installation Steps:
+
  <p>1. Clone the repository</p>
 
     git clone https://github.com/JalilManuel23/user-management-system.git
@@ -47,7 +54,8 @@ _In this step, a prompt should appear asking if you want to create the database.
 
    <p>11. You can now access the server at [http://localhost:8000](http://127.0.0.1:8000)</p>
 
-<h2>🧪 Testing:</h2>
+## Testing
+
 <p>Before running the tests, make sure you are in the root directory of your Laravel project. To run the tests, you can use either of the following commands in your terminal:</p>
 
     php artisan test

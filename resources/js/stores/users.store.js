@@ -51,7 +51,7 @@ export const useUsersStore = defineStore({
         async update(id, params) {
             try {
                 await fetchWrapper.put(`user/${id}`, params);
-                showAlert("User registered successfully");
+                showAlert("User updated successfully");
 
                 // update stored user if the logged in user updated their own record
                 const authStore = useAuthStore();

@@ -54,6 +54,12 @@ _In this step, a prompt should appear asking if you want to create the database.
 
    <p>11. You can now access the server at [http://localhost:8000](http://127.0.0.1:8000)</p>
 
+   <p>12. You can login with this credentials:</p>
+
+    Email: test@example.com
+
+    Password: password
+
 ## Testing
 
 <p>Before running the tests, make sure you are in the root directory of your Laravel project. To run the tests, you can use either of the following commands in your terminal:</p>
